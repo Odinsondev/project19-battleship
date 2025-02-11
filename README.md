@@ -1,3 +1,3 @@
-# template1
+# project19-battleship
 
-Template repository - Webpack
+My nineteenth Odin project - Battleship

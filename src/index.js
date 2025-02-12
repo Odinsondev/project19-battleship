@@ -17,5 +17,10 @@ import { createGameboard } from './gameboard';
 //functions
 
 const board = createGameboard();
-board.placeShip([0, 0], 5, 'vertical');
+board.placeShip('carrier', [0, 0], 'vertical');
+board.receiveAttack([0, 1]);
+board.receiveAttack([0, 2]);
+board.receiveAttack([0, 3]);
+board.receiveAttack([0, 4]);
+board.receiveAttack([0, 5]);
 console.log(board.boardArray);

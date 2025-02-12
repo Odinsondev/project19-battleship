@@ -1,10 +1,24 @@
 export { createShip };
 
 //functions
-function createShip(length) {
+function createShip(type) {
   const ship = {};
 
-  ship.length = length;
+  ship.type = type;
+  ship.length = 0;
+
+  if (type === 'carrier') {
+    ship.length = 5;
+  } else if (type === 'battleship') {
+    ship.length = 4;
+  } else if (type === 'cruiser') {
+    ship.length = 3;
+  } else if (type === 'submarine') {
+    ship.length = 3;
+  } else if (type === 'destroyer') {
+    ship.length = 2;
+  }
+
   ship.timesHit = 0;
   ship.isSunk = false;
 

@@ -40,12 +40,13 @@ function createGameboard() {
   //2. Places the ship object into shipArray
   ///////////////////////////////////
   //Add logic to not go out of board boundaries!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  //Add logic to prevent stacking ships onto each other!!!!!!!!!!!!!!!!1
   gameboard.placeShip = function (type, coordinatesArray, orientation) {
     const ship = createShip(type);
     const length = ship.length;
 
     function fillSquares(coordinatesArray, length, orientation) {
-      if (orientation === 'horizontal') {
+      if (orientation === 'vertical') {
         for (let i = 0; i < length; i++) {
           const coordinate1 = coordinatesArray[0];
           const coordinate2 = coordinatesArray[1];
@@ -55,10 +56,8 @@ function createGameboard() {
           newCoordinatesArray[0] = newCoordinatesArray[0] + i;
           const shipSquareIndex = gameboard.findIndex(newCoordinatesArray);
           gameboard.boardArray[shipSquareIndex][1] = type;
-
-          console.log(gameboard.boardArray[shipSquareIndex]);
         }
-      } else if (orientation === 'vertical') {
+      } else if (orientation === 'horizontal') {
         for (let i = 0; i < length; i++) {
           const coordinate1 = coordinatesArray[0];
           const coordinate2 = coordinatesArray[1];

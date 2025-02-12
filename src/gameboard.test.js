@@ -17,14 +17,14 @@ test('empty square', function () {
 
 test('ship on square', function () {
   const board = createGameboard();
-  board.placeShip('carrier', [0, 0], 'vertical');
+  board.placeShip('carrier', [0, 0], 'horizontal');
 
   expect(board.boardArray[0]).toStrictEqual([[0, 0], 'carrier', false]);
 });
 
 test('empty square after ship ends', function () {
   const board = createGameboard();
-  board.placeShip('carrier', [0, 0], 'vertical');
+  board.placeShip('carrier', [0, 0], 'horizontal');
 
   expect(board.boardArray[5]).toStrictEqual([[0, 5], false, false]);
 });
@@ -32,7 +32,7 @@ test('empty square after ship ends', function () {
 //shipArray
 test('ship added to shipArray', function () {
   const board = createGameboard();
-  board.placeShip('carrier', [0, 0], 'vertical');
+  board.placeShip('carrier', [0, 0], 'horizontal');
 
   expect(board.shipsArray[0].type).toBe('carrier');
 });
@@ -47,7 +47,7 @@ test('record attack on board', function () {
 
 test('record hit on specific ship', function () {
   const board = createGameboard();
-  board.placeShip('carrier', [0, 0], 'vertical');
+  board.placeShip('carrier', [0, 0], 'horizontal');
   board.receiveAttack([0, 1]);
 
   expect(board.shipsArray[0].timesHit).toBe(1);
@@ -56,14 +56,14 @@ test('record hit on specific ship', function () {
 //checkIfAllSunk
 test('check if all sunk when no hits', function () {
   const board = createGameboard();
-  board.placeShip('carrier', [0, 0], 'vertical');
+  board.placeShip('carrier', [0, 0], 'horizontal');
 
   expect(board.checkIfAllSunk()).toBe(false);
 });
 
 test('check if all sunk when 1 hit', function () {
   const board = createGameboard();
-  board.placeShip('carrier', [0, 0], 'vertical');
+  board.placeShip('carrier', [0, 0], 'horizontal');
   board.receiveAttack([0, 1]);
 
   expect(board.checkIfAllSunk()).toBe(false);
@@ -71,7 +71,7 @@ test('check if all sunk when 1 hit', function () {
 
 test('check if all sunk when all sunk', function () {
   const board = createGameboard();
-  board.placeShip('carrier', [0, 0], 'vertical');
+  board.placeShip('carrier', [0, 0], 'horizontal');
   board.receiveAttack([0, 0]);
   board.receiveAttack([0, 1]);
   board.receiveAttack([0, 2]);

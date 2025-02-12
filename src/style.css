@@ -17,38 +17,82 @@ body {
 }
 
 :root {
-  --background1: rgb(255, 255, 255);
+  --background1: rgb(89, 123, 159);
   --background2: rgb(255, 255, 255);
-  --text1: rgb(0, 0, 0);
+  --text1: rgb(209, 248, 239);
   --text2: rgb(0, 0, 0);
-  --text-footer: rgb(0, 0, 0);
+  --text-footer: rgb(209, 248, 239);
   /* font-size: 16px; */ /* Disables browser font size setting */
 }
 
-:root.light {
-  --background1: rgb(255, 255, 255);
-  --background2: rgb(255, 255, 255);
-  --text1: rgb(0, 0, 0);
-  --text2: rgb(0, 0, 0);
-  --text-footer: rgb(0, 0, 0);
-  /* font-size: 16px; */
-}
-
-:root.dark {
-  --background1: rgb(0, 0, 0);
-  --background2: rgb(0, 0, 0);
-  --text1: rgb(255, 255, 255);
-  --text2: rgb(255, 255, 255);
-  --text-footer: rgb(255, 255, 255);
-  /* font-size: 16px; */
-}
-
-/* body {
+body {
   display: grid;
-  grid-template: 1fr / 1fr;
-} */
+  grid-template: 1fr 4fr 40px/ 1fr;
+}
+
+header {
+  grid-row: 1 / 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: var(--text1);
+}
+
+#container {
+  text-align: center;
+}
+
+#title {
+  font-size: 3rem;
+  margin: 0 0 0.5rem 0;
+}
+
+#instructions {
+  font-size: 1rem;
+  margin: 0;
+}
+
+#content1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: 1px solid red;
+}
+
+#boards-wrapper {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  width: 75%;
+  height: 75%;
+
+  border: 1px solid red;
+}
+
+#board1,
+#board2 {
+  display: grid;
+  grid-template:
+    1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr /
+    1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+
+  height: 75%;
+  aspect-ratio: 1 / 1;
+  /* board width does not change with screen size */
+
+  border: 1px solid red;
+}
+
+.board-square {
+  border: 1px solid rgb(80, 79, 153);
+}
 
 footer {
+  grid-row: 3 / 4;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -56,9 +100,4 @@ footer {
   height: 40px;
   font-size: 1rem;
   color: var(--text-footer);
-
-  /* position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0; */
 }

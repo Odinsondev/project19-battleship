@@ -1,26 +1,85 @@
 import './normalize.css';
 import './style.css';
-//import other stylesheets
 
-/* import functionName from './javascriptFile'; */
-import { createShip } from './ship';
-import { createGameboard } from './gameboard';
+/* import { createShip } from './ship';
+import { createGameboard } from './gameboard'; */
 
-/* import pictureName from './imagedDirectory/imageName'; */
+import { createPlayer } from './player';
 
 //initialize
+const player1 = createPlayer('real');
+const player2 = createPlayer('computer');
+
+player1.board.placeShip('carrier', [0, 0], 'vertical');
+player1.board.placeShip('battleship', [2, 4], 'horizontal');
+player1.board.placeShip('cruiser', [4, 4], 'vertical');
+player1.board.placeShip('submarine', [5, 6], 'horizontal');
+player1.board.placeShip('destroyer', [6, 1], 'vertical');
+
+player2.board.placeShip('carrier', [4, 1], 'vertical');
+player2.board.placeShip('battleship', [1, 3], 'horizontal');
+player2.board.placeShip('cruiser', [4, 3], 'vertical');
+player2.board.placeShip('submarine', [4, 6], 'horizontal');
+player2.board.placeShip('destroyer', [6, 5], 'vertical');
+
+console.log('rendering 1st boards');
+player1.renderBoard();
+player2.renderBoard();
 
 //cache DOM
-
+const squareDivsArray = document.getElementsByClassName('board-square');
 //bind events
 
 //functions
+function darkenSquare() {
+  for (let i = 0; i < squareDivsArray.length; i++) {
+    squareDivsArray[i].addEventListener('mouseover', shade);
+    squareDivsArray[i].addEventListener('mouseout', shade2);
 
-const board = createGameboard();
-board.placeShip('carrier', [0, 0], 'vertical');
-board.receiveAttack([0, 1]);
-board.receiveAttack([0, 2]);
-board.receiveAttack([0, 3]);
-board.receiveAttack([0, 4]);
-board.receiveAttack([0, 5]);
-console.log(board.boardArray);
+    function shade() {
+      squareDivsArray[i].style.filter = 'brightness(0.8)';
+    }
+    function shade2() {
+      squareDivsArray[i].style.filter = 'brightness(1)';
+    }
+  }
+  attack();
+}
+darkenSquare();
+
+function attack() {
+  console.log('running attack');
+  for (let i = 0; i < squareDivsArray.length; i++) {
+    squareDivsArray[i].addEventListener('click', passAttack);
+
+    function passAttack() {
+      const coordinates = [];
+      const indexNumber = i;
+      const indexNumberString = indexNumber.toString();
+      const indexNumberArray = indexNumberString.split('');
+
+      let playerBeingAttacked = '';
+
+      //Turns squareDivsArray index into array of coordinates
+      if (indexNumberArray.length === 1) {
+        coordinates[0] = 0;
+        coordinates[1] = parseInt(indexNumberArray[0]);
+        playerBeingAttacked = player1;
+      } else if (indexNumberArray.length === 2) {
+        coordinates[0] = parseInt(indexNumberArray[0]);
+        coordinates[1] = parseInt(indexNumberArray[1]);
+        playerBeingAttacked = player1;
+      } else if (indexNumberArray.length === 3) {
+        coordinates[0] = parseInt(indexNumberArray[1]);
+        coordinates[1] = parseInt(indexNumberArray[2]);
+        playerBeingAttacked = player2;
+      }
+      playerBeingAttacked.board.receiveAttack(coordinates);
+      console.log(playerBeingAttacked.board.shipsArray);
+
+      playerBeingAttacked.renderBoard();
+      darkenSquare();
+    }
+  }
+}
+/* attack(); */

@@ -32,23 +32,56 @@ const squareDivsArray = document.getElementsByClassName('board-square');
 
 //functions
 function darkenSquare() {
+  console.log('running darken');
   for (let i = 0; i < squareDivsArray.length; i++) {
-    squareDivsArray[i].addEventListener('mouseover', shade);
-    squareDivsArray[i].addEventListener('mouseout', shade2);
+    if (squareDivsArray[i].getAttribute('listener') !== 'true') {
+      squareDivsArray[i].addEventListener('mouseover', shade);
+      squareDivsArray[i].addEventListener('mouseout', removeShade);
+      squareDivsArray[i].addEventListener('click', passAttack);
+      squareDivsArray[i].setAttribute('listener', 'true');
+      //attribute to check if event listeners need to be added
+    }
 
     function shade() {
       squareDivsArray[i].style.filter = 'brightness(0.8)';
     }
-    function shade2() {
+
+    function removeShade() {
       squareDivsArray[i].style.filter = 'brightness(1)';
     }
+
+    function passAttack() {
+      const coordinates = [];
+      const indexNumber = i;
+      const indexNumberString = indexNumber.toString();
+      const indexNumberArray = indexNumberString.split('');
+
+      let playerBeingAttacked = '';
+
+      //Turns squareDivsArray index into array of coordinates
+      if (indexNumberArray.length === 1) {
+        coordinates[0] = 0;
+        coordinates[1] = parseInt(indexNumberArray[0]);
+        playerBeingAttacked = player1;
+      } else if (indexNumberArray.length === 2) {
+        coordinates[0] = parseInt(indexNumberArray[0]);
+        coordinates[1] = parseInt(indexNumberArray[1]);
+        playerBeingAttacked = player1;
+      } else if (indexNumberArray.length === 3) {
+        coordinates[0] = parseInt(indexNumberArray[1]);
+        coordinates[1] = parseInt(indexNumberArray[2]);
+        playerBeingAttacked = player2;
+      }
+      playerBeingAttacked.board.receiveAttack(coordinates);
+
+      playerBeingAttacked.renderBoard();
+      darkenSquare();
+    }
   }
-  attack();
 }
 darkenSquare();
 
-function attack() {
-  console.log('running attack');
+/* function attack() {
   for (let i = 0; i < squareDivsArray.length; i++) {
     squareDivsArray[i].addEventListener('click', passAttack);
 
@@ -75,11 +108,10 @@ function attack() {
         playerBeingAttacked = player2;
       }
       playerBeingAttacked.board.receiveAttack(coordinates);
-      console.log(playerBeingAttacked.board.shipsArray);
 
       playerBeingAttacked.renderBoard();
       darkenSquare();
     }
   }
-}
+} */
 /* attack(); */

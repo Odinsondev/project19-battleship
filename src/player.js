@@ -16,8 +16,8 @@ function createPlayer(type) {
 
   //can shorten this function
   player.renderBoard = function () {
-    //why not logging
     console.log('running renderBoard');
+    console.log(type);
 
     let playerBoard = '';
 
@@ -30,12 +30,19 @@ function createPlayer(type) {
     playerBoard.innerHTML = '';
 
     for (let i = 0; i < this.board.boardArray.length; i++) {
+      console.log('running loop');
       const boardSquare = document.createElement('div');
       boardSquare.classList.add('board-square');
 
-      if (player.board.boardArray[i][1] === false) {
+      if (
+        player.board.boardArray[i][1] === false &&
+        player.board.boardArray[i][2] === false
+      ) {
         boardSquare.style.backgroundColor = 'rgb(64, 62, 147)';
-      } else if (player.board.boardArray[i][1] !== false) {
+      } else if (
+        player.board.boardArray[i][1] !== false &&
+        player.board.boardArray[i][2] === false
+      ) {
         boardSquare.style.backgroundColor = 'rgb(136, 150, 158)';
       }
 
@@ -43,7 +50,6 @@ function createPlayer(type) {
       //add code to have different colours for shot ships and shot water
       if (player.board.boardArray[i][2] === true) {
         boardSquare.style.backgroundColor = 'black';
-        console.log('running turn black');
       }
 
       playerBoard.appendChild(boardSquare);

@@ -16,9 +16,6 @@ function createPlayer(type) {
 
   //can shorten this function
   player.renderBoard = function () {
-    console.log('running renderBoard');
-    console.log(type);
-
     let playerBoard = '';
 
     if (type === 'real') {
@@ -30,7 +27,6 @@ function createPlayer(type) {
     playerBoard.innerHTML = '';
 
     for (let i = 0; i < this.board.boardArray.length; i++) {
-      console.log('running loop');
       const boardSquare = document.createElement('div');
       boardSquare.classList.add('board-square');
 
@@ -58,5 +54,3 @@ function createPlayer(type) {
 
   return player;
 }
-
-function test() {}

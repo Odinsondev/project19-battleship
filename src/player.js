@@ -44,8 +44,22 @@ function createPlayer(type) {
 
       //marks shot squares
       //add code to have different colours for shot ships and shot water
-      if (player.board.boardArray[i][2] === true) {
-        boardSquare.style.backgroundColor = 'black';
+      if (
+        player.board.boardArray[i][2] === true &&
+        player.board.boardArray[i][1] === false
+      ) {
+        boardSquare.style.backgroundColor = 'rgb(64, 62, 147)';
+        const dot = document.createElement('div');
+        dot.classList.add('dot');
+        boardSquare.appendChild(dot);
+      } else if (
+        player.board.boardArray[i][2] === true &&
+        player.board.boardArray[i][1] !== false
+      ) {
+        boardSquare.style.backgroundColor = 'rgb(136, 150, 158)';
+        const dot = document.createElement('div');
+        dot.classList.add('dot2');
+        boardSquare.appendChild(dot);
       }
 
       playerBoard.appendChild(boardSquare);

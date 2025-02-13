@@ -1,7 +1,7 @@
 import './normalize.css';
 import './style.css';
 
-import { startGame, addListeners } from './event_listeners';
+import { startGame, addListeners } from './game_logic';
 
 //initialize
 startGame();

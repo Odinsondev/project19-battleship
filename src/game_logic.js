@@ -75,14 +75,29 @@ function addListeners() {
           coordinates[1] = parseInt(indexNumberArray[2]);
           playerBeingAttacked = player2;
         }
+
+        //Checks if location already attacked and attacks again
+        const attackedSquareIndex = player2.board.findIndex(coordinates);
+        console.log(attackedSquareIndex);
+        if (player2.board.boardArray[attackedSquareIndex][2] === true) {
+          addListeners();
+          return;
+        }
+
         playerBeingAttacked.board.receiveAttack(coordinates);
 
         playerBeingAttacked.renderBoard();
+
+        if (playerBeingAttacked.board.checkIfAllSunk() === true) {
+          alert('Game Over');
+        }
+
         turnCounter();
         addListeners();
       }
     }
   } else if (turn === 'player2') {
+    //This code is useless until adding 2 'real' player support
     for (let i = 0; i < 100; i++) {
       if (squareDivsArray[i].getAttribute('listener') !== 'true') {
         squareDivsArray[i].addEventListener('mouseover', shade);
@@ -122,9 +137,23 @@ function addListeners() {
           coordinates[1] = parseInt(indexNumberArray[2]);
           playerBeingAttacked = player2;
         }
+
+        //Checks if location already attacked and attacks again
+        const attackedSquareIndex = player1.board.findIndex(coordinates);
+        console.log(attackedSquareIndex);
+        if (player1.board.boardArray[attackedSquareIndex][2] === true) {
+          addListeners();
+          return;
+        }
+
         playerBeingAttacked.board.receiveAttack(coordinates);
 
         playerBeingAttacked.renderBoard();
+
+        if (playerBeingAttacked.board.checkIfAllSunk() === true) {
+          alert('Game Over');
+        }
+
         turnCounter();
         addListeners();
       }
@@ -132,12 +161,58 @@ function addListeners() {
   }
 }
 
+//change function name
 function turnCounter() {
   if (turn === 'player1') {
     turn = 'player2';
     playerText.textContent = 'Turn: Player Two';
+
+    //when updating game to include 2 players, refactor this code
+    setTimeout(computerAttack, 250);
   } else if (turn === 'player2') {
     turn = 'player1';
     playerText.textContent = 'Turn: Player One';
   }
+}
+
+function computerAttack() {
+  console.log('run2');
+
+  function createRandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+  }
+
+  const attackLocation = createRandomNumber(0, 100);
+
+  const coordinates = [];
+
+  const attackLocationString = attackLocation.toString();
+  const attackLocationArray = attackLocationString.split('');
+
+  if (attackLocationArray.length === 1) {
+    coordinates[0] = 0;
+    coordinates[1] = parseInt(attackLocationArray[0]);
+  } else if (attackLocationArray.length === 2) {
+    coordinates[0] = parseInt(attackLocationArray[0]);
+    coordinates[1] = parseInt(attackLocationArray[1]);
+  }
+
+  //Checks if location already attacked and attacks again
+  const attackedSquareIndex = player1.board.findIndex(coordinates);
+  console.log(attackedSquareIndex);
+  if (player1.board.boardArray[attackedSquareIndex][2] === true) {
+    computerAttack();
+    return;
+  }
+
+  player1.board.receiveAttack(coordinates);
+
+  player1.renderBoard();
+
+  if (player1.board.checkIfAllSunk() === true) {
+    alert('Game Over');
+  }
+
+  turnCounter();
+  addListeners();
 }

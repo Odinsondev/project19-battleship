@@ -54,6 +54,8 @@ header {
 }
 
 #content1 {
+  grid-row: 2 / 3;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -117,6 +119,16 @@ header {
   margin: 0;
   padding: 0;
 }
+
+/* #content2 {
+  grid-row: 3 / 4;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: 1px solid red;
+} */
 
 footer {
   grid-row: 3 / 4;

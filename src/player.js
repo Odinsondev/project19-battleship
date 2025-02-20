@@ -30,36 +30,68 @@ function createPlayer(type) {
       const boardSquare = document.createElement('div');
       boardSquare.classList.add('board-square');
 
-      if (
-        player.board.boardArray[i][1] === false &&
-        player.board.boardArray[i][2] === false
-      ) {
-        boardSquare.style.backgroundColor = 'rgb(64, 62, 147)';
-      } else if (
-        player.board.boardArray[i][1] !== false &&
-        player.board.boardArray[i][2] === false
-      ) {
-        boardSquare.style.backgroundColor = 'rgb(136, 150, 158)';
-      }
+      if (type === 'real') {
+        if (
+          player.board.boardArray[i][1] === false &&
+          player.board.boardArray[i][2] === false
+        ) {
+          boardSquare.style.backgroundColor = 'rgb(64, 62, 147)';
+        } else if (
+          player.board.boardArray[i][1] !== false &&
+          player.board.boardArray[i][2] === false
+        ) {
+          boardSquare.style.backgroundColor = 'rgb(136, 150, 158)';
+        }
 
-      //marks shot squares
-      //add code to have different colours for shot ships and shot water
-      if (
-        player.board.boardArray[i][2] === true &&
-        player.board.boardArray[i][1] === false
-      ) {
-        boardSquare.style.backgroundColor = 'rgb(64, 62, 147)';
-        const dot = document.createElement('div');
-        dot.classList.add('dot');
-        boardSquare.appendChild(dot);
-      } else if (
-        player.board.boardArray[i][2] === true &&
-        player.board.boardArray[i][1] !== false
-      ) {
-        boardSquare.style.backgroundColor = 'rgb(136, 150, 158)';
-        const dot = document.createElement('div');
-        dot.classList.add('dot2');
-        boardSquare.appendChild(dot);
+        //marks shot squares
+        if (
+          player.board.boardArray[i][2] === true &&
+          player.board.boardArray[i][1] === false
+        ) {
+          boardSquare.style.backgroundColor = 'rgb(64, 62, 147)';
+          const dot = document.createElement('div');
+          dot.classList.add('dot');
+          boardSquare.appendChild(dot);
+        } else if (
+          player.board.boardArray[i][2] === true &&
+          player.board.boardArray[i][1] !== false
+        ) {
+          boardSquare.style.backgroundColor = 'rgb(136, 150, 158)';
+          const dot = document.createElement('div');
+          dot.classList.add('dot2');
+          boardSquare.appendChild(dot);
+        }
+      } else if (type === 'computer') {
+        if (
+          player.board.boardArray[i][1] === false &&
+          player.board.boardArray[i][2] === false
+        ) {
+          boardSquare.style.backgroundColor = 'rgb(64, 62, 147)';
+        } else if (
+          player.board.boardArray[i][1] !== false &&
+          player.board.boardArray[i][2] === false
+        ) {
+          boardSquare.style.backgroundColor = 'rgb(64, 62, 147)';
+        }
+
+        //marks shot squares
+        if (
+          player.board.boardArray[i][2] === true &&
+          player.board.boardArray[i][1] === false
+        ) {
+          boardSquare.style.backgroundColor = 'rgb(64, 62, 147)';
+          const dot = document.createElement('div');
+          dot.classList.add('dot');
+          boardSquare.appendChild(dot);
+        } else if (
+          player.board.boardArray[i][2] === true &&
+          player.board.boardArray[i][1] !== false
+        ) {
+          boardSquare.style.backgroundColor = 'rgb(64, 62, 147)';
+          const dot = document.createElement('div');
+          dot.classList.add('dot2');
+          boardSquare.appendChild(dot);
+        }
       }
 
       playerBoard.appendChild(boardSquare);
@@ -67,9 +99,17 @@ function createPlayer(type) {
   };
 
   const boardsWrapper = document.getElementById('boards-wrapper');
+  const board1 = document.getElementById('board1');
+  const board2 = document.getElementById('board2');
+  const placeButton = document.getElementById('place');
 
   player.renderShipSelector = function () {
+    player2Board.innerHTML = '';
+
     boardsWrapper.style.justifyContent = 'center';
+    board1.style.borderRadius = '10px 0 0 10px';
+    board2.style.borderRadius = '0 10px 10px 0';
+    placeButton.style.display = 'none';
 
     const shipImage1 = document.createElement('div');
     shipImage1.id = 'ship1';

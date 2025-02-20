@@ -1,6 +1,10 @@
-export { createGameboard };
+export { createGameboard, selectionFailedShip, orientationOfFailedShip };
 
 import { createShip } from './ship';
+
+//global variable for game_logic addListener2 function to check
+let selectionFailedShip = '';
+let orientationOfFailedShip = '';
 
 //Functions
 function createGameboard() {
@@ -51,6 +55,7 @@ function createGameboard() {
         for (let i = 0; i < length; i++) {
           const coordinate1 = coordinatesArray[0];
           const coordinate2 = coordinatesArray[1];
+          //Needed to create a new array
           let newCoordinatesArray = [];
           newCoordinatesArray[0] = coordinate1;
           newCoordinatesArray[1] = coordinate2;
@@ -87,10 +92,6 @@ function createGameboard() {
     }
     testIfSquaresEmpty(coordinatesArray, length, orientation);
 
-    if (abortFuction === true) {
-      return;
-    }
-
     function fillSquares(coordinatesArray, length, orientation) {
       if (orientation === 'vertical') {
         for (let i = 0; i < length; i++) {
@@ -116,9 +117,21 @@ function createGameboard() {
         }
       }
     }
-    fillSquares(coordinatesArray, length, orientation);
 
-    gameboard.shipsArray.push(ship);
+    if (abortFuction === true) {
+      //exits function
+      //add a BETTER way to NOT deselect the ship if unavailable square clicked
+      selectionFailedShip = type;
+      orientationOfFailedShip = orientation;
+      return;
+    } else if (abortFuction !== true) {
+      fillSquares(coordinatesArray, length, orientation);
+
+      gameboard.shipsArray.push(ship);
+
+      selectionFailedShip = '';
+      orientationOfFailedShip = '';
+    }
   };
 
   //Receives shots from enemy player

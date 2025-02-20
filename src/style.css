@@ -59,19 +59,30 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
-
-  border: 1px solid red;
 }
 
 #boards-wrapper {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: center;
 
-  width: 75%;
+  width: 65%;
   height: 75%;
 
-  border: 1px solid red;
+  background-color: rgb(127, 156, 188);
+  border-radius: 20px;
+}
+
+#place {
+  height: 40px;
+  border-radius: 5px;
+  border: none;
+}
+
+#s-button {
+  height: 32px;
+  border-radius: 5px;
+  border: none;
 }
 
 #board1,
@@ -85,8 +96,20 @@ header {
   aspect-ratio: 1 / 1;
   /* board width does not change with screen size */
 
-  border: 1px solid red;
+  background-color: rgb(64, 62, 147);
+  border-radius: 10px;
+  overflow: hidden;
 }
+
+/* #board1::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  left: 40px;
+  top: 0px;
+  background-color: black;
+  z-index: 1;
+} */
 
 .board-square {
   border: 1px solid rgb(80, 79, 153);

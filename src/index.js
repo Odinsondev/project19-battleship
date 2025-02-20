@@ -8,11 +8,9 @@ import { startGame, addListeners, startGame2 } from './game_logic';
 addListeners(); */
 
 //cache DOM
-const startButton = document.getElementById('start');
+const placeButton = document.getElementById('place');
 
 //bind events
-startButton.addEventListener('click', startGame2);
-/* startButton.addEventListener('click', addListeners);
- */
+placeButton.addEventListener('click', startGame2);
 
 //functions

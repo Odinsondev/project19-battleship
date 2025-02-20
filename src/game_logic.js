@@ -1,6 +1,7 @@
 export { startGame, addListeners, startGame2 };
 
 import { createPlayer } from './player';
+import { selectionFailedShip, orientationOfFailedShip } from './gameboard';
 
 //initialize
 
@@ -12,24 +13,138 @@ let turn = 'player1';
 
 const playerText = document.getElementById('instructions');
 
+const boardsWrapper = document.getElementById('boards-wrapper');
+const board1 = document.getElementById('board1');
+const board2 = document.getElementById('board2');
+
 //bind events
 
 //functions
 function startGame() {
-  player1.board.placeShip('carrier', [0, 0], 'vertical');
-  player1.board.placeShip('battleship', [2, 4], 'horizontal');
-  player1.board.placeShip('cruiser', [4, 4], 'vertical');
-  player1.board.placeShip('submarine', [5, 6], 'horizontal');
-  player1.board.placeShip('destroyer', [6, 1], 'vertical');
+  placePlayer2Ships();
 
+  boardsWrapper.style.justifyContent = 'space-evenly';
+  board1.style.borderRadius = '10px';
+  board2.style.borderRadius = '10px';
+
+  player1.renderBoard();
+  player2.renderBoard();
+  addListeners();
+}
+
+function placePlayer2ShipsTemp() {
   player2.board.placeShip('carrier', [4, 1], 'vertical');
   player2.board.placeShip('battleship', [1, 3], 'horizontal');
   player2.board.placeShip('cruiser', [4, 3], 'vertical');
   player2.board.placeShip('submarine', [4, 6], 'horizontal');
   player2.board.placeShip('destroyer', [6, 5], 'vertical');
+}
 
-  player1.renderBoard();
-  player2.renderBoard();
+//Places player 2 ships randomly
+//Refactor to not have to randomly run many times to make legal placements
+function placePlayer2Ships() {
+  //location randomization
+  function createRandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+  }
+
+  const placementLocation = createRandomNumber(0, 100);
+
+  const coordinates2 = [];
+
+  const placementLocationString = placementLocation.toString();
+  const placementLocationArray = placementLocationString.split('');
+
+  if (placementLocationArray.length === 1) {
+    coordinates2[0] = 0;
+    coordinates2[1] = parseInt(placementLocationArray[0]);
+  } else if (placementLocationArray.length === 2) {
+    coordinates2[0] = parseInt(placementLocationArray[0]);
+    coordinates2[1] = parseInt(placementLocationArray[1]);
+  }
+
+  //ship randomization
+  let selectedShip2 = '';
+
+  function createRandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+  }
+  const shipNumber = createRandomNumber(0, 5);
+
+  if (shipNumber === 0) {
+    selectedShip2 = 'carrier';
+  } else if (shipNumber === 1) {
+    selectedShip2 = 'battleship';
+  } else if (shipNumber === 2) {
+    selectedShip2 = 'cruiser';
+  } else if (shipNumber === 3) {
+    selectedShip2 = 'submarine';
+  } else if (shipNumber === 4) {
+    selectedShip2 = 'destroyer';
+  }
+
+  //orientation randomizer
+  let orientation2 = '';
+
+  function createRandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+  }
+  const orientationNumber = createRandomNumber(0, 2);
+
+  if (orientationNumber === 0) {
+    orientation2 = 'horizontal';
+  } else if (orientationNumber === 1) {
+    orientation2 = 'vertical';
+  }
+
+  console.log('running the function');
+
+  //sending the place ship message etc
+  if (player2.board.shipsArray.length === 0) {
+    player2.board.placeShip(selectedShip2, coordinates2, orientation2);
+    placePlayer2Ships();
+    //only sends message if current type of board not on board
+  } else if (player2.board.shipsArray.length === 1) {
+    if (player2.board.shipsArray[0].type === selectedShip2) {
+      placePlayer2Ships();
+    } else {
+      player2.board.placeShip(selectedShip2, coordinates2, orientation2);
+      placePlayer2Ships();
+    }
+  } else if (player2.board.shipsArray.length === 2) {
+    if (
+      player2.board.shipsArray[0].type === selectedShip2 ||
+      player2.board.shipsArray[1].type === selectedShip2
+    ) {
+      placePlayer2Ships();
+    } else {
+      player2.board.placeShip(selectedShip2, coordinates2, orientation2);
+      placePlayer2Ships();
+    }
+  } else if (player2.board.shipsArray.length === 3) {
+    if (
+      player2.board.shipsArray[0].type === selectedShip2 ||
+      player2.board.shipsArray[1].type === selectedShip2 ||
+      player2.board.shipsArray[2].type === selectedShip2
+    ) {
+      placePlayer2Ships();
+    } else {
+      player2.board.placeShip(selectedShip2, coordinates2, orientation2);
+      placePlayer2Ships();
+    }
+  } else if (player2.board.shipsArray.length === 4) {
+    if (
+      player2.board.shipsArray[0].type === selectedShip2 ||
+      player2.board.shipsArray[1].type === selectedShip2 ||
+      player2.board.shipsArray[2].type === selectedShip2 ||
+      player2.board.shipsArray[3].type === selectedShip2
+    ) {
+      placePlayer2Ships();
+    } else {
+      player2.board.placeShip(selectedShip2, coordinates2, orientation2);
+      placePlayer2Ships();
+    }
+  }
 }
 
 //Adds event listeners to the other player's board
@@ -89,6 +204,7 @@ function addListeners() {
 
         if (playerBeingAttacked.board.checkIfAllSunk() === true) {
           alert('Game Over');
+          createStartNewGameButton();
         }
 
         turnCounter();
@@ -214,14 +330,42 @@ function computerAttack() {
 }
 
 function startGame2() {
+  //add code to clear board if new game
+  //Resets player1 board
+  for (let i = 0; i < player1.board.boardArray.length; i++) {
+    player1.board.boardArray[i][1] = false;
+    player1.board.boardArray[i][2] = false;
+  }
+
+  //Resets player2 board
+  for (let i = 0; i < player2.board.boardArray.length; i++) {
+    player2.board.boardArray[i][1] = false;
+    player2.board.boardArray[i][2] = false;
+  }
+
+  player1.board.shipsArray.length = 0;
+  player2.board.shipsArray.length = 0;
+
   player1.renderBoard();
   player1.renderShipSelector();
   addListeners2();
 }
 
+//Adds event listeners and functions to select, move, rotate and place the ship
 function addListeners2() {
   let selectedShip = '';
-  let orientation = 'vertical';
+
+  if (selectionFailedShip === '') {
+    selectedShip = '';
+  } else if (selectionFailedShip !== '') {
+    selectedShip = selectionFailedShip;
+  }
+
+  let orientation = 'horizontal';
+
+  if (orientationOfFailedShip === 'vertical') {
+    orientation = 'vertical';
+  }
 
   const player1Board = document.getElementById('board1');
 
@@ -253,60 +397,68 @@ function addListeners2() {
   ship1.addEventListener('click', selectShip1);
 
   function selectShip1() {
-    ship1.style.backgroundColor = 'rgb(120, 177, 134)';
-    ship2.style.backgroundColor = 'rgb(136, 150, 158)';
-    ship3.style.backgroundColor = 'rgb(136, 150, 158)';
-    ship4.style.backgroundColor = 'rgb(136, 150, 158)';
-    ship5.style.backgroundColor = 'rgb(136, 150, 158)';
-    selectedShip = 'carrier';
+    //Checks if ship has already been placed
+    if (ship1.style.backgroundColor !== 'rgb(99, 110, 118)') {
+      ship1.style.backgroundColor = 'rgb(120, 177, 134)';
+      selectedShip = 'carrier';
+    }
   }
 
   const ship2 = document.getElementById('ship2');
   ship2.addEventListener('click', selectShip2);
 
   function selectShip2() {
-    ship1.style.backgroundColor = 'rgb(136, 150, 158)';
-    ship2.style.backgroundColor = 'rgb(120, 177, 134)';
-    ship3.style.backgroundColor = 'rgb(136, 150, 158)';
-    ship4.style.backgroundColor = 'rgb(136, 150, 158)';
-    ship5.style.backgroundColor = 'rgb(136, 150, 158)';
-    selectedShip = 'battleship';
+    if (ship2.style.backgroundColor !== 'rgb(99, 110, 118)') {
+      ship2.style.backgroundColor = 'rgb(120, 177, 134)';
+      selectedShip = 'battleship';
+    }
   }
 
   const ship3 = document.getElementById('ship3');
   ship3.addEventListener('click', selectShip3);
 
   function selectShip3() {
-    ship1.style.backgroundColor = 'rgb(136, 150, 158)';
-    ship2.style.backgroundColor = 'rgb(136, 150, 158)';
-    ship3.style.backgroundColor = 'rgb(120, 177, 134)';
-    ship4.style.backgroundColor = 'rgb(136, 150, 158)';
-    ship5.style.backgroundColor = 'rgb(136, 150, 158)';
-    selectedShip = 'cruiser';
+    if (ship3.style.backgroundColor !== 'rgb(99, 110, 118)') {
+      ship3.style.backgroundColor = 'rgb(120, 177, 134)';
+      selectedShip = 'cruiser';
+    }
   }
 
   const ship4 = document.getElementById('ship4');
   ship4.addEventListener('click', selectShip4);
 
   function selectShip4() {
-    ship1.style.backgroundColor = 'rgb(136, 150, 158)';
-    ship2.style.backgroundColor = 'rgb(136, 150, 158)';
-    ship3.style.backgroundColor = 'rgb(136, 150, 158)';
-    ship4.style.backgroundColor = 'rgb(120, 177, 134)';
-    ship5.style.backgroundColor = 'rgb(136, 150, 158)';
-    selectedShip = 'submarine';
+    if (ship4.style.backgroundColor !== 'rgb(99, 110, 118)') {
+      ship4.style.backgroundColor = 'rgb(120, 177, 134)';
+      selectedShip = 'submarine';
+    }
   }
 
   const ship5 = document.getElementById('ship5');
   ship5.addEventListener('click', selectShip5);
 
   function selectShip5() {
-    ship1.style.backgroundColor = 'rgb(136, 150, 158)';
-    ship2.style.backgroundColor = 'rgb(136, 150, 158)';
-    ship3.style.backgroundColor = 'rgb(136, 150, 158)';
-    ship4.style.backgroundColor = 'rgb(136, 150, 158)';
-    ship5.style.backgroundColor = 'rgb(120, 177, 134)';
-    selectedShip = 'destroyer';
+    if (ship5.style.backgroundColor !== 'rgb(99, 110, 118)') {
+      ship5.style.backgroundColor = 'rgb(120, 177, 134)';
+      selectedShip = 'destroyer';
+    }
+  }
+
+  //turns ship selector button darker
+  function deselectShip(ship) {
+    if (selectionFailedShip === '') {
+      if (ship === 'carrier') {
+        ship1.style.backgroundColor = 'rgb(99, 110, 118)';
+      } else if (ship === 'battleship') {
+        ship2.style.backgroundColor = 'rgb(99, 110, 118)';
+      } else if (ship === 'cruiser') {
+        ship3.style.backgroundColor = 'rgb(99, 110, 118)';
+      } else if (ship === 'submarine') {
+        ship4.style.backgroundColor = 'rgb(99, 110, 118)';
+      } else if (ship === 'destroyer') {
+        ship5.style.backgroundColor = 'rgb(99, 110, 118)';
+      }
+    }
   }
 
   for (let i = 0; i < squareDivsArray.length; i++) {
@@ -453,56 +605,106 @@ function addListeners2() {
       if (selectedShip === 'carrier') {
         if (orientation === 'vertical') {
           squareDivsArray[i].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 10].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 20].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 30].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 40].style.filter = 'brightness(0.8)';
+          //if statement doesn't allow to go out of bounds
+          if (i + 10 < 100) {
+            squareDivsArray[i + 10].style.filter = 'brightness(0.8)';
+          }
+          if (i + 20 < 100) {
+            squareDivsArray[i + 20].style.filter = 'brightness(0.8)';
+          }
+          if (i + 30 < 100) {
+            squareDivsArray[i + 30].style.filter = 'brightness(0.8)';
+          }
+          if (i + 40 < 100) {
+            squareDivsArray[i + 40].style.filter = 'brightness(0.8)';
+          }
         } else if (orientation === 'horizontal') {
           squareDivsArray[i].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 1].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 2].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 3].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 4].style.filter = 'brightness(0.8)';
+          //if statement doesn't allow to go out of bounds
+          if (Math.floor(i / 10) === Math.floor((i + 1) / 10)) {
+            squareDivsArray[i + 1].style.filter = 'brightness(0.8)';
+          }
+          if (Math.floor(i / 10) === Math.floor((i + 2) / 10)) {
+            squareDivsArray[i + 2].style.filter = 'brightness(0.8)';
+          }
+          if (Math.floor(i / 10) === Math.floor((i + 3) / 10)) {
+            squareDivsArray[i + 3].style.filter = 'brightness(0.8)';
+          }
+          if (Math.floor(i / 10) === Math.floor((i + 4) / 10)) {
+            squareDivsArray[i + 4].style.filter = 'brightness(0.8)';
+          }
         }
       } else if (selectedShip === 'battleship') {
         if (orientation === 'vertical') {
           squareDivsArray[i].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 10].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 20].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 30].style.filter = 'brightness(0.8)';
+          if (i + 10 < 100) {
+            squareDivsArray[i + 10].style.filter = 'brightness(0.8)';
+          }
+          if (i + 20 < 100) {
+            squareDivsArray[i + 20].style.filter = 'brightness(0.8)';
+          }
+          if (i + 30 < 100) {
+            squareDivsArray[i + 30].style.filter = 'brightness(0.8)';
+          }
         } else if (orientation === 'horizontal') {
           squareDivsArray[i].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 1].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 2].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 3].style.filter = 'brightness(0.8)';
+          if (Math.floor(i / 10) === Math.floor((i + 1) / 10)) {
+            squareDivsArray[i + 1].style.filter = 'brightness(0.8)';
+          }
+          if (Math.floor(i / 10) === Math.floor((i + 2) / 10)) {
+            squareDivsArray[i + 2].style.filter = 'brightness(0.8)';
+          }
+          if (Math.floor(i / 10) === Math.floor((i + 3) / 10)) {
+            squareDivsArray[i + 3].style.filter = 'brightness(0.8)';
+          }
         }
       } else if (selectedShip === 'cruiser') {
         if (orientation === 'vertical') {
           squareDivsArray[i].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 10].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 20].style.filter = 'brightness(0.8)';
+          if (i + 10 < 100) {
+            squareDivsArray[i + 10].style.filter = 'brightness(0.8)';
+          }
+          if (i + 20 < 100) {
+            squareDivsArray[i + 20].style.filter = 'brightness(0.8)';
+          }
         } else if (orientation === 'horizontal') {
           squareDivsArray[i].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 1].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 2].style.filter = 'brightness(0.8)';
+          if (Math.floor(i / 10) === Math.floor((i + 1) / 10)) {
+            squareDivsArray[i + 1].style.filter = 'brightness(0.8)';
+          }
+          if (Math.floor(i / 10) === Math.floor((i + 2) / 10)) {
+            squareDivsArray[i + 2].style.filter = 'brightness(0.8)';
+          }
         }
       } else if (selectedShip === 'submarine') {
         if (orientation === 'vertical') {
           squareDivsArray[i].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 10].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 20].style.filter = 'brightness(0.8)';
+          if (i + 10 < 100) {
+            squareDivsArray[i + 10].style.filter = 'brightness(0.8)';
+          }
+          if (i + 20 < 100) {
+            squareDivsArray[i + 20].style.filter = 'brightness(0.8)';
+          }
         } else if (orientation === 'horizontal') {
           squareDivsArray[i].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 1].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 2].style.filter = 'brightness(0.8)';
+          if (Math.floor(i / 10) === Math.floor((i + 1) / 10)) {
+            squareDivsArray[i + 1].style.filter = 'brightness(0.8)';
+          }
+          if (Math.floor(i / 10) === Math.floor((i + 2) / 10)) {
+            squareDivsArray[i + 2].style.filter = 'brightness(0.8)';
+          }
         }
       } else if (selectedShip === 'destroyer') {
         if (orientation === 'vertical') {
           squareDivsArray[i].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 10].style.filter = 'brightness(0.8)';
+          if (i + 10 < 100) {
+            squareDivsArray[i + 10].style.filter = 'brightness(0.8)';
+          }
         } else if (orientation === 'horizontal') {
           squareDivsArray[i].style.filter = 'brightness(0.8)';
-          squareDivsArray[i + 1].style.filter = 'brightness(0.8)';
+          if (Math.floor(i / 10) === Math.floor((i + 1) / 10)) {
+            squareDivsArray[i + 1].style.filter = 'brightness(0.8)';
+          }
         }
       }
     }
@@ -523,8 +725,29 @@ function addListeners2() {
       }
 
       player1.board.placeShip(selectedShip, coordinates, orientation);
+      deselectShip(selectedShip);
       player1.renderBoard();
       addListeners2();
+      enableStartGameButton();
+
+      function enableStartGameButton() {
+        if (
+          ship1.style.backgroundColor === 'rgb(99, 110, 118)' &&
+          ship2.style.backgroundColor === 'rgb(99, 110, 118)' &&
+          ship3.style.backgroundColor === 'rgb(99, 110, 118)' &&
+          ship4.style.backgroundColor === 'rgb(99, 110, 118)' &&
+          ship5.style.backgroundColor === 'rgb(99, 110, 118)'
+        ) {
+          const startButton = document.getElementById('s-button');
+          startButton.addEventListener('click', startGame);
+        }
+      }
     }
   }
+}
+
+function createStartNewGameButton() {
+  const placeButton = document.getElementById('place');
+  placeButton.style.display = 'inline';
+  placeButton.textContent = 'New Game';
 }

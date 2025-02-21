@@ -59,6 +59,9 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  min-height: 0;
+  min-width: 0;
 }
 
 #boards-wrapper {
@@ -94,22 +97,33 @@ header {
 
   height: 75%;
   aspect-ratio: 1 / 1;
-  /* board width does not change with screen size */
 
   background-color: rgb(64, 62, 147);
   border-radius: 10px;
   overflow: hidden;
 }
 
-/* #board1::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  left: 40px;
-  top: 0px;
-  background-color: black;
-  z-index: 1;
-} */
+@media (max-width: 1250px) {
+  #boards-wrapper {
+    flex-direction: column;
+    height: 100%;
+  }
+  #board1,
+  #board2 {
+    height: 33vh;
+    aspect-ratio: 1 / 1;
+    border-radius: 10px !important;
+  }
+  #board2 {
+    margin-top: 10px;
+  }
+  #boards-wrapper > div > div {
+    font-size: 0.7rem;
+  }
+  #s-button {
+    height: 23px;
+  }
+}
 
 .board-square {
   border: 1px solid rgb(80, 79, 153);
@@ -142,16 +156,6 @@ header {
   margin: 0;
   padding: 0;
 }
-
-/* #content2 {
-  grid-row: 3 / 4;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  border: 1px solid red;
-} */
 
 footer {
   grid-row: 3 / 4;

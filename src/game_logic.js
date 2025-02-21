@@ -1,9 +1,7 @@
-export { startGame, addListeners, startGame2 };
+export { startGame, addListeners, startShipPlacement };
 
 import { createPlayer } from './player';
 import { selectionFailedShip, orientationOfFailedShip } from './gameboard';
-
-//initialize
 
 //cache DOM
 const player1 = createPlayer('real');
@@ -17,11 +15,13 @@ const boardsWrapper = document.getElementById('boards-wrapper');
 const board1 = document.getElementById('board1');
 const board2 = document.getElementById('board2');
 
-//bind events
-
 //functions
+
+//Starts the game
 function startGame() {
   placePlayer2Ships();
+
+  playerText.textContent = 'Turn: Player One';
 
   boardsWrapper.style.justifyContent = 'space-evenly';
   board1.style.borderRadius = '10px';
@@ -32,26 +32,15 @@ function startGame() {
   addListeners();
 }
 
-function placePlayer2ShipsTemp() {
-  player2.board.placeShip('carrier', [4, 1], 'vertical');
-  player2.board.placeShip('battleship', [1, 3], 'horizontal');
-  player2.board.placeShip('cruiser', [4, 3], 'vertical');
-  player2.board.placeShip('submarine', [4, 6], 'horizontal');
-  player2.board.placeShip('destroyer', [6, 5], 'vertical');
-}
-
 //Places player 2 ships randomly
-//Refactor to not have to randomly run many times to make legal placements
 function placePlayer2Ships() {
-  //location randomization
+  //Location randomization
   function createRandomNumber(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
   }
 
   const placementLocation = createRandomNumber(0, 100);
-
   const coordinates2 = [];
-
   const placementLocationString = placementLocation.toString();
   const placementLocationArray = placementLocationString.split('');
 
@@ -63,12 +52,13 @@ function placePlayer2Ships() {
     coordinates2[1] = parseInt(placementLocationArray[1]);
   }
 
-  //ship randomization
+  //Ship randomization
   let selectedShip2 = '';
 
   function createRandomNumber(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
   }
+
   const shipNumber = createRandomNumber(0, 5);
 
   if (shipNumber === 0) {
@@ -83,12 +73,13 @@ function placePlayer2Ships() {
     selectedShip2 = 'destroyer';
   }
 
-  //orientation randomizer
+  //Orientation randomizer
   let orientation2 = '';
 
   function createRandomNumber(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
   }
+
   const orientationNumber = createRandomNumber(0, 2);
 
   if (orientationNumber === 0) {
@@ -97,9 +88,7 @@ function placePlayer2Ships() {
     orientation2 = 'vertical';
   }
 
-  console.log('running the function');
-
-  //sending the place ship message etc
+  //Sending the 'place ship' message
   if (player2.board.shipsArray.length === 0) {
     player2.board.placeShip(selectedShip2, coordinates2, orientation2);
     placePlayer2Ships();
@@ -148,7 +137,6 @@ function placePlayer2Ships() {
 }
 
 //Adds event listeners to the other player's board
-//refactor code to remove duplicate code
 function addListeners() {
   if (turn === 'player1') {
     for (let i = 100; i < 200; i++) {
@@ -157,7 +145,7 @@ function addListeners() {
         squareDivsArray[i].addEventListener('mouseout', removeShade);
         squareDivsArray[i].addEventListener('click', passAttack);
         squareDivsArray[i].setAttribute('listener', 'true');
-        //attribute to check if event listeners need to be added
+        //Attribute to check if event listeners need to be added
       }
 
       function shade() {
@@ -199,7 +187,6 @@ function addListeners() {
         }
 
         playerBeingAttacked.board.receiveAttack(coordinates);
-
         playerBeingAttacked.renderBoard();
 
         if (playerBeingAttacked.board.checkIfAllSunk() === true) {
@@ -212,7 +199,7 @@ function addListeners() {
       }
     }
   } else if (turn === 'player2') {
-    //This code is useless until adding 2 'real' player support
+    //This code is not used until adding second 'real' player option
     for (let i = 0; i < 100; i++) {
       if (squareDivsArray[i].getAttribute('listener') !== 'true') {
         squareDivsArray[i].addEventListener('mouseover', shade);
@@ -276,13 +263,13 @@ function addListeners() {
   }
 }
 
-//change function name
+//Displays active player's turn, calls the AI random move function
 function turnCounter() {
   if (turn === 'player1') {
     turn = 'player2';
     playerText.textContent = 'Turn: Player Two';
 
-    //when updating game to include 2 players, refactor this code
+    //When updating game to include 2 players, refactor this code
     setTimeout(computerAttack, 250);
   } else if (turn === 'player2') {
     turn = 'player1';
@@ -290,15 +277,14 @@ function turnCounter() {
   }
 }
 
+//Creates a random attack during player 2 turn
 function computerAttack() {
   function createRandomNumber(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
   }
 
   const attackLocation = createRandomNumber(0, 100);
-
   const coordinates = [];
-
   const attackLocationString = attackLocation.toString();
   const attackLocationArray = attackLocationString.split('');
 
@@ -318,7 +304,6 @@ function computerAttack() {
   }
 
   player1.board.receiveAttack(coordinates);
-
   player1.renderBoard();
 
   if (player1.board.checkIfAllSunk() === true) {
@@ -329,8 +314,7 @@ function computerAttack() {
   addListeners();
 }
 
-function startGame2() {
-  //add code to clear board if new game
+function startShipPlacement() {
   //Resets player1 board
   for (let i = 0; i < player1.board.boardArray.length; i++) {
     player1.board.boardArray[i][1] = false;
@@ -343,6 +327,7 @@ function startGame2() {
     player2.board.boardArray[i][2] = false;
   }
 
+  //Resets shipsArrays
   player1.board.shipsArray.length = 0;
   player2.board.shipsArray.length = 0;
 
@@ -369,7 +354,7 @@ function addListeners2() {
 
   const player1Board = document.getElementById('board1');
 
-  //stops right-click menu - don't know how
+  //Disables right-click menu
   player1Board.addEventListener(
     'contextmenu',
     function (evt) {
@@ -444,7 +429,7 @@ function addListeners2() {
     }
   }
 
-  //turns ship selector button darker
+  //Turns ship selector button darker
   function deselectShip(ship) {
     if (selectionFailedShip === '') {
       if (ship === 'carrier') {
@@ -473,7 +458,7 @@ function addListeners2() {
       if (selectedShip === 'carrier') {
         if (orientation === 'vertical') {
           squareDivsArray[i].style.filter = 'brightness(0.8)';
-          //if statement doesn't allow to go out of bounds
+          //If statement doesn't allow to go out of bounds
           if (i + 10 < 100) {
             squareDivsArray[i + 10].style.filter = 'brightness(0.8)';
           }
@@ -488,7 +473,7 @@ function addListeners2() {
           }
         } else if (orientation === 'horizontal') {
           squareDivsArray[i].style.filter = 'brightness(0.8)';
-          //if statement doesn't allow to go out of bounds
+          //If statement doesn't allow to go out of bounds
           if (Math.floor(i / 10) === Math.floor((i + 1) / 10)) {
             squareDivsArray[i + 1].style.filter = 'brightness(0.8)';
           }

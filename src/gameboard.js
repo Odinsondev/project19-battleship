@@ -25,7 +25,6 @@ function createGameboard() {
   };
 
   gameboard.boardArray = gameboard.createBoardArray();
-
   gameboard.shipsArray = [];
 
   //Finds the array index of a square based on the coordinates
@@ -42,9 +41,6 @@ function createGameboard() {
   //Places ship on the gameboard:
   //1. Changes boardArray square[1] from false to ship type string
   //2. Places the ship object into shipArray
-  ///////////////////////////////////
-  //Add logic to not go out of board boundaries!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  //Add logic to prevent stacking ships onto each other!!!!!!!!!!!!!!!!
   gameboard.placeShip = function (type, coordinatesArray, orientation) {
     const ship = createShip(type);
     const length = ship.length;
@@ -119,8 +115,8 @@ function createGameboard() {
     }
 
     if (abortFuction === true) {
-      //exits function
-      //add a BETTER way to NOT deselect the ship if unavailable square clicked
+      //Exits function
+      //Uses global variables to not deselect the ship if illegal square selected
       selectionFailedShip = type;
       orientationOfFailedShip = orientation;
       return;

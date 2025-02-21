@@ -3,7 +3,6 @@ export { createPlayer };
 import { createGameboard } from './gameboard';
 
 //cache DOM
-//add logic to render the correct board
 const player1Board = document.getElementById('board1');
 const player2Board = document.getElementById('board2');
 
@@ -14,7 +13,6 @@ function createPlayer(type) {
   player.type = type;
   player.board = createGameboard();
 
-  //can shorten this function
   player.renderBoard = function () {
     let playerBoard = '';
 
@@ -42,8 +40,7 @@ function createPlayer(type) {
         ) {
           boardSquare.style.backgroundColor = 'rgb(136, 150, 158)';
         }
-
-        //marks shot squares
+        //Marks shot squares
         if (
           player.board.boardArray[i][2] === true &&
           player.board.boardArray[i][1] === false
@@ -73,8 +70,7 @@ function createPlayer(type) {
         ) {
           boardSquare.style.backgroundColor = 'rgb(64, 62, 147)';
         }
-
-        //marks shot squares
+        //Marks shot squares
         if (
           player.board.boardArray[i][2] === true &&
           player.board.boardArray[i][1] === false
@@ -99,16 +95,14 @@ function createPlayer(type) {
   };
 
   const boardsWrapper = document.getElementById('boards-wrapper');
-  const board1 = document.getElementById('board1');
-  const board2 = document.getElementById('board2');
   const placeButton = document.getElementById('place');
 
   player.renderShipSelector = function () {
     player2Board.innerHTML = '';
 
     boardsWrapper.style.justifyContent = 'center';
-    board1.style.borderRadius = '10px 0 0 10px';
-    board2.style.borderRadius = '0 10px 10px 0';
+    player1Board.style.borderRadius = '10px 0 0 10px';
+    player2Board.style.borderRadius = '0 10px 10px 0';
     placeButton.style.display = 'none';
 
     const shipImage1 = document.createElement('div');
@@ -163,8 +157,7 @@ function createPlayer(type) {
     instructionsBox.id = 'instruction-box';
     instructionsBox.style.gridColumn = '2 / 11';
     instructionsBox.style.gridRow = '8 / 11';
-    /*     instructionsBox.style.backgroundColor = 'rgb(155, 188, 206)';
-     */
+
     const instructionsText = document.createElement('p');
     instructionsText.id = 'instructions-text';
     instructionsText.textContent = 'Click on a ship to select';

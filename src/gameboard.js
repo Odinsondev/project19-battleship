@@ -2,11 +2,13 @@ export { createGameboard, selectionFailedShip, orientationOfFailedShip };
 
 import { createShip } from './ship';
 
-//global variable for game_logic addListener2 function to check
+//Global variable for game_logic addListener2 function to check
 let selectionFailedShip = '';
 let orientationOfFailedShip = '';
 
-//Functions
+//functions
+
+//Creates gameboard objects
 function createGameboard() {
   const gameboard = {};
 

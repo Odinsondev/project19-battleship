@@ -22,7 +22,6 @@ body {
   --text1: rgb(209, 248, 239);
   --text2: rgb(0, 0, 0);
   --text-footer: rgb(209, 248, 239);
-  /* font-size: 16px; */ /* Disables browser font size setting */
 }
 
 body {
@@ -32,6 +31,7 @@ body {
 
 header {
   grid-row: 1 / 2;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -71,12 +71,11 @@ header {
 
   width: 65%;
   height: 75%;
-
   background-color: rgb(127, 156, 188);
   border-radius: 20px;
 }
 
-#place {
+#new-game {
   height: 40px;
   border-radius: 5px;
   border: none;
@@ -97,7 +96,6 @@ header {
 
   height: 75%;
   aspect-ratio: 1 / 1;
-
   background-color: rgb(64, 62, 147);
   border-radius: 10px;
   overflow: hidden;
@@ -124,12 +122,11 @@ header {
 }
 
 .board-square {
-  border: 1px solid rgb(80, 79, 153);
-
   display: flex;
-
   justify-content: center;
   align-items: center;
+
+  border: 1px solid rgb(80, 79, 153);
 }
 
 .dot {
@@ -138,7 +135,6 @@ header {
   background-color: rgb(46, 45, 92);
   border-radius: 50%;
   display: inline-block;
-
   margin: 0;
   padding: 0;
 }
@@ -150,9 +146,42 @@ header {
   border: 2px solid rgb(231, 97, 85);
   border-radius: 50%;
   display: inline-block;
-
   margin: 0;
   padding: 0;
+}
+
+#pop-up {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  height: 20vh;
+  width: 20vw;
+  background-color: rgb(43, 41, 131);
+  color: var(--text1);
+  border: 2px solid orange;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 1.2rem;
+
+  opacity: 0;
+  transition: opacity 500ms ease, display 500ms allow-discrete;
+}
+
+#pop-up.visible {
+  display: flex;
+  opacity: 1;
+}
+
+@starting-style {
+  #pop-up.visible {
+    opacity: 0;
+  }
 }
 
 footer {

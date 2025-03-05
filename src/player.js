@@ -7,6 +7,8 @@ const player1Board = document.getElementById('board1');
 const player2Board = document.getElementById('board2');
 
 //functions
+
+//Creates player objects
 function createPlayer(type) {
   const player = {};
 
@@ -95,7 +97,7 @@ function createPlayer(type) {
   };
 
   const boardsWrapper = document.getElementById('boards-wrapper');
-  const placeButton = document.getElementById('place');
+  const newGameButton = document.getElementById('new-game');
 
   player.renderShipSelector = function () {
     player2Board.innerHTML = '';
@@ -103,7 +105,7 @@ function createPlayer(type) {
     boardsWrapper.style.justifyContent = 'center';
     player1Board.style.borderRadius = '10px 0 0 10px';
     player2Board.style.borderRadius = '0 10px 10px 0';
-    placeButton.style.display = 'none';
+    newGameButton.style.display = 'none';
 
     const shipImage1 = document.createElement('div');
     shipImage1.id = 'ship1';

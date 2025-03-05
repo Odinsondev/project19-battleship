@@ -15,6 +15,9 @@ const boardsWrapper = document.getElementById('boards-wrapper');
 const board1 = document.getElementById('board1');
 const board2 = document.getElementById('board2');
 
+const popup = document.getElementById('pop-up');
+const winnerText = document.getElementById('winner-text');
+
 //functions
 
 //Starts the game
@@ -136,7 +139,7 @@ function placePlayer2Ships() {
   }
 }
 
-//Adds event listeners to the other player's board
+//Adds event listeners to the other player's board to receive a click/attack
 function addListeners() {
   if (turn === 'player1') {
     for (let i = 100; i < 200; i++) {
@@ -190,8 +193,7 @@ function addListeners() {
         playerBeingAttacked.renderBoard();
 
         if (playerBeingAttacked.board.checkIfAllSunk() === true) {
-          alert('Game Over');
-          createStartNewGameButton();
+          endGame();
         }
 
         turnCounter();
@@ -253,7 +255,7 @@ function addListeners() {
         playerBeingAttacked.renderBoard();
 
         if (playerBeingAttacked.board.checkIfAllSunk() === true) {
-          alert('Game Over');
+          endGame();
         }
 
         turnCounter();
@@ -307,14 +309,18 @@ function computerAttack() {
   player1.renderBoard();
 
   if (player1.board.checkIfAllSunk() === true) {
-    alert('Game Over');
+    endGame();
   }
 
   turnCounter();
   addListeners();
 }
 
+//Starts the ship placement process
 function startShipPlacement() {
+  //Adds instructions to header
+  playerText.textContent = 'Please place your ships';
+
   //Resets player1 board
   for (let i = 0; i < player1.board.boardArray.length; i++) {
     player1.board.boardArray[i][1] = false;
@@ -731,8 +737,40 @@ function addListeners2() {
   }
 }
 
-function createStartNewGameButton() {
-  const placeButton = document.getElementById('place');
-  placeButton.style.display = 'inline';
-  placeButton.textContent = 'New Game';
+//Shows 'game over' popup and creates 'new game' button
+function endGame() {
+  if (turn === 'player1') {
+    winnerText.textContent = 'Player One has won';
+  } else if (turn === 'player2') {
+    winnerText.textContent = 'Player Two has won';
+  }
+
+  //Starts 'game over' popup transition
+  popup.classList.add('visible');
+
+  //If no delay, the last shot 'click' will remove the popup
+  setTimeout(addListener3, 500);
+
+  //Adds event listener to remove the popup
+  function addListener3() {
+    document.addEventListener('click', removePopup);
+  }
+
+  function removePopup() {
+    popup.classList.remove('visible');
+    //Removes the eventListener for the next game
+    document.removeEventListener('click', removePopup);
+  }
+
+  //Creates New Game button
+  const newGameButton = document.getElementById('new-game');
+  newGameButton.style.display = 'inline';
+  newGameButton.textContent = 'New Game';
 }
+
+//Temporary function to end the game - for development
+/* document.addEventListener('keydown', function (e) {
+  if (e.key === 'e') {
+    endGame();
+  }
+}); */

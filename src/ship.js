@@ -1,6 +1,8 @@
 export { createShip };
 
 //functions
+
+//Creates ship objects
 function createShip(type) {
   const ship = {};
 
